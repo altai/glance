@@ -1,0 +1,3 @@
+copy: redhat/*.init
+copy: redhat/*.conf
+tar.gz: . name=glance-@version@ base=glance-@version@
