@@ -43,6 +43,7 @@ BuildRoot:        %{_tmppath}/%{prj}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:        noarch
 BuildRequires:    python-devel
 BuildRequires:    python-setuptools
+BuildRequires:    python-distutils-extra
 
 Requires(post):   chkconfig
 Requires(postun): initscripts
