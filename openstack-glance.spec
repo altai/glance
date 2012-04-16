@@ -22,6 +22,21 @@ Source1:          %{prj}-api.init
 Source2:          %{prj}-registry.init
 Source3:          %{short_name}-logging-api.conf
 Source4:          %{short_name}-logging-registry.conf
+Source5:          %{prj}-api-paste.ini
+Source6:          %{prj}-api.conf
+Source7:          %{prj}-cache-paste.ini
+Source8:          %{prj}-cache.conf
+Source9:          %{prj}-prefetcher.conf
+Source10:         %{prj}-pruner.conf
+Source11:         %{prj}-reaper.conf
+Source12:         %{prj}-registry-paste.ini
+Source13:         %{prj}-registry.conf
+Source14:         %{prj}-scrubber-paste.ini
+Source15:         %{prj}-scrubber.conf
+Source16:         logging.cnf.sample
+Source17:         policy.json
+
+
 
 BuildRoot:        %{_tmppath}/%{prj}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -126,10 +141,21 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 install -d -m 755 %{buildroot}%{_sharedstatedir}/%{prj}/images
 
 # Config file
-install -p -D -m 644 etc/%{prj}-api.conf %{buildroot}%{_sysconfdir}/%{prj}/%{prj}-api.conf
-install -p -D -m 644 etc/%{prj}-registry.conf %{buildroot}%{_sysconfdir}/%{prj}/%{prj}-registry.conf
-install -p -D -m 644 %{SOURCE3} %{buildroot}%{_sysconfdir}/%{prj}/logging-api.conf
-install -p -D -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/%{prj}/logging-registry.conf
+install -p -D -m 644 %{SOURCE3}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE3}"`
+install -p -D -m 644 %{SOURCE4}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE4}"`    
+install -p -D -m 644 %{SOURCE5}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE5}"` 
+install -p -D -m 644 %{SOURCE6}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE6}"` 
+install -p -D -m 644 %{SOURCE7}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE7}"` 
+install -p -D -m 644 %{SOURCE8}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE8}"` 
+install -p -D -m 644 %{SOURCE9}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE9}"` 
+install -p -D -m 644 %{SOURCE10}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE10}"`
+install -p -D -m 644 %{SOURCE11}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE11}"`
+install -p -D -m 644 %{SOURCE12}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE12}"`
+install -p -D -m 644 %{SOURCE13}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE13}"`
+install -p -D -m 644 %{SOURCE14}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE14}"`
+install -p -D -m 644 %{SOURCE15}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE15}"`
+install -p -D -m 644 %{SOURCE16}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE16}"`
+install -p -D -m 644 %{SOURCE17}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE17}"`
 
 # Initscripts
 install -p -D -m 755 %{SOURCE1} %{buildroot}%{_initrddir}/%{prj}-api
@@ -177,6 +203,21 @@ fi
 %config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-registry.conf
 %config(noreplace) %{_sysconfdir}/%{prj}/logging-api.conf
 %config(noreplace) %{_sysconfdir}/%{prj}/logging-registry.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-api-paste.ini
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-api-paste.ini
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-api.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-cache-paste.ini
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-cache.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-prefetcher.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-pruner.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-reaper.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-registry-paste.ini
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-registry.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-scrubber-paste.ini
+%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-scrubber.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/logging.cnf.sample
+%config(noreplace) %{_sysconfdir}/%{prj}/policy.json
+
 %{_sharedstatedir}/%{prj}
 %dir %attr(0755, %{prj}, nobody) %{_localstatedir}/log/%{prj}
 %dir %attr(0755, %{prj}, nobody) %{_localstatedir}/run/%{prj}
