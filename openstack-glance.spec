@@ -20,8 +20,8 @@ URL:              http://%{prj}.openstack.org
 Source0:          %{prj}-%{version}.tar.gz
 Source1:          %{prj}-api.init
 Source2:          %{prj}-registry.init
-Source3:          %{short_name}-logging-api.conf
-Source4:          %{short_name}-logging-registry.conf
+Source3:          logging-api.conf
+Source4:          logging-registry.conf
 Source5:          %{prj}-api-paste.ini
 Source6:          %{prj}-api.conf
 Source7:          %{prj}-cache-paste.ini
