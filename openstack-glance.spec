@@ -61,7 +61,7 @@ Requires:         python-gflags >= 1.3
 Requires:         python-greenlet >= 0.3.1
 Requires:         python-lockfile >= 0.8
 Requires:         python-mox >= 0.5.0
-Requires:         python-paste-deploy
+Requires:         python-paste-deploy >= 1.5.0
 Requires:         python-routes
 Requires:         python-sqlalchemy >= 0.6.3
 Requires:         python-webob >= 1.0.8
