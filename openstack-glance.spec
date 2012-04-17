@@ -82,6 +82,7 @@ Requires:         python-routes
 Requires:         python-sqlalchemy >= 0.6.3
 Requires:         python-webob >= 1.0.8
 Requires:         pyxattr >= 0.6.0
+Requires:         python-pycrypto
 
 %description -n   python-%{prj}-%{os_release}
 The Glance project provides services for discovering, registering, and
