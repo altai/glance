@@ -23,6 +23,7 @@ import hashlib
 import httplib
 import logging
 import math
+import urllib
 import urlparse
 
 from glance.common import exception
@@ -70,7 +71,7 @@ class StoreLocation(glance.store.location.StoreLocation):
 
     def _get_credstring(self):
         if self.user:
-            return '%s:%s@' % (self.user, self.key)
+            return '%s:%s@' % (urllib.quote(self.user), urllib.quote(self.key))
         return ''
 
     def get_uri(self):
@@ -109,8 +110,7 @@ class StoreLocation(glance.store.location.StoreLocation):
                     "like so: "
                     "swift+http://user:pass@authurl.com/v1/container/obj"
                     )
-            logger.error(_("Invalid store uri %(uri)s: %(reason)s") % locals())
-            raise exception.BadStoreUri()
+            raise exception.BadStoreUri(uri, reason)
 
         pieces = urlparse.urlparse(uri)
         assert pieces.scheme in ('swift', 'swift+http', 'swift+https')
@@ -134,22 +134,13 @@ class StoreLocation(glance.store.location.StoreLocation):
             path = path[path.find('/'):].strip('/')
         if creds:
             cred_parts = creds.split(':')
-
-            # User can be account:user, in which case cred_parts[0:2] will be
-            # the account and user. Combine them into a single username of
-            # account:user
-            if len(cred_parts) == 1:
+            if len(cred_parts) != 2:
                 reason = (_("Badly formed credentials '%(creds)s' in Swift "
                             "URI") % locals())
-                logger.error(reason)
-                raise exception.BadStoreUri()
-            elif len(cred_parts) == 3:
-                user = ':'.join(cred_parts[0:2])
-            else:
-                user = cred_parts[0]
-            key = cred_parts[-1]
-            self.user = user
-            self.key = key
+                raise exception.BadStoreUri(uri, reason)
+            user, key = cred_parts
+            self.user = urllib.unquote(user)
+            self.key = urllib.unquote(key)
         else:
             self.user = None
         path_parts = path.split('/')
@@ -161,9 +152,8 @@ class StoreLocation(glance.store.location.StoreLocation):
                 path_parts.insert(0, netloc)
                 self.authurl = '/'.join(path_parts)
         except IndexError:
-            reason = _("Badly formed Swift URI: %s") % uri
-            logger.error(reason)
-            raise exception.BadStoreUri()
+            reason = _("Badly formed Swift URI")
+            raise exception.BadStoreUri(uri, reason)
 
     @property
     def swift_auth_url(self):
@@ -427,11 +417,11 @@ class Store(glance.store.base.Store):
                         self.container, chunk_name, reader,
                         content_length=content_length)
                     bytes_read = reader.bytes_read
-                    msg = _("Wrote chunk %(chunk_name)s (%(chunk_id)d/"
-                            "%(total_chunks)s) of length %(bytes_read)d "
-                            "to Swift returning MD5 of content: "
-                            "%(chunk_etag)s")
-                    logger.debug(msg % locals())
+                    logger.debug(_("Wrote chunk %(chunk_id)d/"
+                                   "%(total_chunks)s of length %(bytes_read)d "
+                                   "to Swift returning MD5 of content: "
+                                   "%(chunk_etag)s")
+                                 % locals())
 
                     if bytes_read == 0:
                         # Delete the last chunk, because it's of zero size.
