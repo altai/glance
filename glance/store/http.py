@@ -131,6 +131,9 @@ class Store(glance.store.base.Store):
 
         return (ResponseIndexable(iterator, content_length), content_length)
 
+    def get_schemes(self):
+        return ('http', 'https')
+
     def get_size(self, location):
         """
         Takes a `glance.store.location.Location` object that indicates
@@ -160,6 +163,3 @@ class Store(glance.store.base.Store):
         """
         return {'http': httplib.HTTPConnection,
                 'https': httplib.HTTPSConnection}[loc.scheme]
-
-
-glance.store.register_store(__name__, ['http', 'https'])
