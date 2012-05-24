@@ -37,13 +37,6 @@ binfile=/usr/bin/glance-$suffix
 start() {
     __pids_var_run "$binfile" "$pidfile"
     retval=$?
-    if [ $retval -eq 0 ]; then
-        cmd=${binfile##*/}
-        echo -n "$cmd is already running (pid $pid)";
-        passed
-        echo
-        return
-    fi
 
     echo -n "Starting $prog: "
     cd /var/lib/glance

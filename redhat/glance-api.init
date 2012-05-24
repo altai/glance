@@ -36,16 +36,6 @@ lckfile=/var/lock/subsys/glance-$suffix
 binfile=/usr/bin/glance-$suffix
 
 start() {
-    __pids_var_run "$binfile" "$pidfile"
-    retval=$?
-    if [ $retval -eq 0 ]; then
-        cmd=${binfile##*/}
-        echo -n "$cmd is already running (pid $pid)";
-        passed
-        echo
-        return
-    fi
-
     echo -n "Starting $prog: "
     cd /var/lib/glance
     /sbin/start-stop-daemon --start -b -c glance:nobody --make-pidfile --pidfile $pidfile --exec $binfile -- --config-file=$flgfile --log-config=$logconf
@@ -53,13 +43,10 @@ start() {
 
     __pids_var_run "$binfile" "$pidfile"
     retval=$?
-    if [ $retval -eq 0 ]; then
-        touch $lckfile
-        success
-    else
-        failure
-    fi
+    [ $retval -eq 0 ] && success || failure
     echo
+    [ $retval -eq 0 ] && touch $lckfile
+    return $retval
 }
 
 stop() {
