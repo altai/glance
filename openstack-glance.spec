@@ -94,7 +94,7 @@ querying of VM image metadata as well as retrieval of the actual image.
 This package contains the project's Python library.
 
 %if 0%{?with_doc}
-%package doc-%{os_release}
+%package doc
 Summary:          Documentation for OpenStack Glance
 Group:            Documentation
 
@@ -109,7 +109,7 @@ BuildRequires:    python-routes
 BuildRequires:    python-sqlalchemy
 BuildRequires:    python-webob
 
-%description      doc-%{os_release}
+%description      doc
 The Glance project provides services for discovering, registering, and
 retrieving virtual machine images. Glance has a RESTful API that allows
 querying of VM image metadata as well as retrieval of the actual image.
@@ -227,7 +227,7 @@ fi
 %{python_sitelib}/*
 
 %if 0%{?with_doc}
-%files doc-%{os_release}
+%files doc
 %defattr(-,root,root,-)
 %doc ChangeLog
 %doc doc/build/html
