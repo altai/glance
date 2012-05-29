@@ -203,11 +203,6 @@ fi
 %{_initrddir}/%{prj}-api
 %{_initrddir}/%{prj}-registry
 %defattr(-,%{prj},nobody,-)
-%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-api.conf
-%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-registry.conf
-%config(noreplace) %{_sysconfdir}/%{prj}/logging-api.conf
-%config(noreplace) %{_sysconfdir}/%{prj}/logging-registry.conf
-%config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-api-paste.ini
 %config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-api-paste.ini
 %config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-api.conf
 %config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-cache-paste.ini
@@ -219,6 +214,8 @@ fi
 %config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-registry.conf
 %config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-scrubber-paste.ini
 %config(noreplace) %{_sysconfdir}/%{prj}/%{prj}-scrubber.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/logging-api.conf
+%config(noreplace) %{_sysconfdir}/%{prj}/logging-registry.conf
 %config(noreplace) %{_sysconfdir}/%{prj}/logging.cnf.sample
 %config(noreplace) %{_sysconfdir}/%{prj}/policy.json
 
@@ -227,8 +224,7 @@ fi
 %dir %attr(0755, %{prj}, nobody) %{_localstatedir}/run/%{prj}
 
 %files -n python-%{prj}-%{os_release}
-%{python_sitelib}/%{prj}
-%{python_sitelib}/%{prj}-%{version}-*.egg-info
+%{python_sitelib}/*
 
 %if 0%{?with_doc}
 %files doc-%{os_release}
