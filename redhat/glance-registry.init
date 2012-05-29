@@ -31,35 +31,32 @@ suffix="registry"
 flgfile=/etc/glance/glance-$suffix.conf
 logconf=/etc/glance/logging-$suffix.conf
 pidfile=/var/run/glance/glance-$suffix.pid
-lckfile=/var/lock/subsys/glance-$suffix
+lockfile=/var/lock/subsys/glance-$suffix
 binfile=/usr/bin/glance-$suffix
+daemonuser=glance
 
 start() {
-    __pids_var_run "$binfile" "$pidfile"
-    retval=$?
-
     echo -n "Starting $prog: "
-    cd /var/lib/glance
-    /sbin/start-stop-daemon --start -b -c glance:nobody --make-pidfile --pidfile $pidfile --exec $binfile -- --config-file=$flgfile -v --log-config=$logconf
-    sleep 1
-
-    __pids_var_run "$binfile" "$pidfile"
+    start-stop-daemon --start --oknodo --background --chuid $daemonuser --make-pidfile --pidfile $pidfile --startas $binfile --
     retval=$?
-    if [ $retval -eq 0 ]; then
-        touch $lckfile
-        success
-    else
-        failure
-    fi
+    [ $retval -eq 0 ] && success || failure
     echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
 }
 
 stop() {
     echo -n "Stopping $prog: "
-    killproc -p $pidfile $binfile
+    start-stop-daemon --stop --oknodo --pidfile $pidfile
     retval=$?
+    [ $retval -eq 0 ] && success || failure
     echo
-    [ $retval -eq 0 ] && rm -f $lckfile $pidfile
+    [ $retval -eq 0 ] && rm -f $lockfile $pidfile
+    return $?
+}
+
+rh_status() {
+    status -p $pidfile $binfile
 }
 
 restart() {
@@ -70,31 +67,23 @@ restart() {
 case "$1" in
     start)
         start
-    ;;
+        ;;
     stop)
         stop
-    ;;
+        ;;
     status)
-        status -p $pidfile $binfile
-        retval=$?
-        if [ $retval -eq 3 -a -f $lckfile ]; then
-            retval=2
-        fi
-    ;;
+        rh_status
+        ;;
     restart)
         restart
-    ;;
-    force-reload)
-        restart
-    ;;
-    condrestart)
-        if [ -n "`pidofproc-p$pidfile$binfile`" ]; then
-            restart
-        fi
-    ;;
+        ;;
+    condrestart|try-restart)
+        [ -f $lockfile ] && restart
+        ;;
     *)
-        echo "Usage: service glance-$suffix{start|stop|status|restart|force-reload|condrestart}"
+        echo "Usage: service $(basename $0) {start|stop|status|restart|condrestart|try-restart}"
         exit 1
-    ;;
+        ;;
 esac
-exit $retval
+
+exit $?
