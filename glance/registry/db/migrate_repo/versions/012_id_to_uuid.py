@@ -225,6 +225,13 @@ def _get_table(table_name, metadata):
 
 def _get_foreign_keys(t_images, t_image_members, t_image_properties):
     """Retrieve and return foreign keys for members/properties tables."""
+    try:
+        image_members_fk_name = list(t_image_members.foreign_keys)[0].name
+        image_properties_fk_name = list(t_image_properties.foreign_keys)[0].name
+    except IndexError:
+        image_members_fk_name = "ix_image_members_image_id_name"
+        image_properties_fk_name = "ix_image_properties_key"
+
     foreign_keys = []
     if t_image_members.foreign_keys:
         img_members_fk_name = list(t_image_members.foreign_keys)[0].name
