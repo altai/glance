@@ -52,6 +52,8 @@ Requires(pre):    shadow-utils
 Requires:         python-%{prj}-%{os_release} = %{epoch}:%{version}-%{release}
 Requires:         python-kombu >= 1.1.3
 Requires:         start-stop-daemon
+Requires:         python-jsonschema
+
 
 Conflicts: %{short_name} =< 2011.3.2
 
