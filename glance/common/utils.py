@@ -177,7 +177,7 @@ def is_uuid_like(value):
         uuid.UUID(value)
         return True
     except Exception:
-        return False
+        return value.isdigit()
 
 
 def isotime(at=None):
