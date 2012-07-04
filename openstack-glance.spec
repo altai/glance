@@ -87,6 +87,7 @@ Requires:         pyxattr >= 0.6.0
 Requires:         python-pycrypto
 Requires:         python-sqlalchemy-migrate
 Requires:         python-crypto
+Requires:         python-iso8601
 
 %description -n   python-%{prj}-%{os_release}
 The Glance project provides services for discovering, registering, and
