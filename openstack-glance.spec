@@ -17,28 +17,9 @@ Group:            Development/Languages
 License:          ASL 2.0
 Vendor:           Grid Dynamics Consulting Services, Inc.
 URL:              http://%{prj}.openstack.org
-Source0:          %{prj}-%{version}.tar.gz
-Source1:          %{prj}-api.init
-Source2:          %{prj}-registry.init
-Source3:          logging-api.conf
-Source4:          logging-registry.conf
-Source5:          %{prj}-api-paste.ini
-Source6:          %{prj}-api.conf
-Source7:          %{prj}-cache-paste.ini
-Source8:          %{prj}-cache.conf
-Source9:          %{prj}-prefetcher.conf
-Source10:         %{prj}-pruner.conf
-Source11:         %{prj}-reaper.conf
-Source12:         %{prj}-registry-paste.ini
-Source13:         %{prj}-registry.conf
-Source14:         %{prj}-scrubber-paste.ini
-Source15:         %{prj}-scrubber.conf
-Source16:         logging.cnf.sample
-Source17:         policy.json
+Source0:          %{name}-%{version}.tar.gz
 
-
-
-BuildRoot:        %{_tmppath}/%{prj}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:        %{_tmppath}/%{prj}-%{version}-%{release}
 
 BuildArch:        noarch
 BuildRequires:    python-devel
@@ -122,7 +103,7 @@ This package contains documentation files for OpenStack Glance.
 %endif
 
 %prep
-%setup -q -n %{prj}-%{version}
+%setup -q 
 
 %build
 %{__python} setup.py build
@@ -148,25 +129,30 @@ rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
 install -d -m 755 %{buildroot}%{_sharedstatedir}/%{prj}/images
 
 # Config file
-install -p -D -m 644 %{SOURCE3}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE3}"`
-install -p -D -m 644 %{SOURCE4}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE4}"`    
-install -p -D -m 644 %{SOURCE5}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE5}"` 
-install -p -D -m 644 %{SOURCE6}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE6}"` 
-install -p -D -m 644 %{SOURCE7}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE7}"` 
-install -p -D -m 644 %{SOURCE8}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE8}"` 
-install -p -D -m 644 %{SOURCE9}    %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE9}"` 
-install -p -D -m 644 %{SOURCE10}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE10}"`
-install -p -D -m 644 %{SOURCE11}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE11}"`
-install -p -D -m 644 %{SOURCE12}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE12}"`
-install -p -D -m 644 %{SOURCE13}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE13}"`
-install -p -D -m 644 %{SOURCE14}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE14}"`
-install -p -D -m 644 %{SOURCE15}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE15}"`
-install -p -D -m 644 %{SOURCE16}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE16}"`
-install -p -D -m 644 %{SOURCE17}   %{buildroot}%{_sysconfdir}/%{prj}/`basename "%{SOURCE17}"`
+config_files="logging-api.conf
+         logging-registry.conf
+         glance-api-paste.ini
+         glance-api.conf
+         glance-cache-paste.ini
+         glance-cache.conf
+         glance-prefetcher.conf
+         glance-pruner.conf
+         glance-reaper.conf
+         glance-registry-paste.ini
+         glance-registry.conf
+         glance-scrubber-paste.ini
+         glance-scrubber.conf
+         logging.cnf.sample
+         policy.json"
+for i in $config_files; do
+    install -p -D -m 644 redhat/$i  %{buildroot}%{_sysconfdir}/%{prj}/$i
+done
 
 # Initscripts
-install -p -D -m 755 %{SOURCE1} %{buildroot}%{_initrddir}/%{prj}-api
-install -p -D -m 755 %{SOURCE2} %{buildroot}%{_initrddir}/%{prj}-registry
+for i in glance-api glance-registry; do
+    install -p -D -m 755 redhat/${i}.init %{buildroot}%{_initrddir}/$i
+done
+
 
 # Install pid directory
 install -d -m 755 %{buildroot}%{_localstatedir}/run/%{prj}
