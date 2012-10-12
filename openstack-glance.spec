@@ -61,12 +61,12 @@ Requires:         python-greenlet >= 0.3.1
 Requires:         python-lockfile >= 0.8
 Requires:         python-mox >= 0.5.0
 Requires:         python-paste-deploy >= 1.5.0
-Requires:         python-routes
-Requires:         python-sqlalchemy >= 0.6.3
-Requires:         python-webob >= 1.0.8
+Requires:         python-routes1.12
+Requires:         python-sqlalchemy0.7
+Requires:         python-webob1.0
 Requires:         pyxattr >= 0.6.0
 Requires:         python-pycrypto
-Requires:         python-sqlalchemy-migrate
+Requires:         python-migrate
 Requires:         python-crypto
 Requires:         python-iso8601
 
@@ -89,9 +89,9 @@ BuildRequires:    python-boto
 BuildRequires:    python-daemon
 BuildRequires:    python-eventlet
 BuildRequires:    python-gflags
-BuildRequires:    python-routes
-BuildRequires:    python-sqlalchemy
-BuildRequires:    python-webob
+BuildRequires:    python-routes1.12
+BuildRequires:    python-sqlalchemy0.7
+BuildRequires:    python-webob1.0
 
 %description      doc
 The Glance project provides services for discovering, registering, and
