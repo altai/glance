@@ -1,13 +1,11 @@
 %global with_doc 0
 %global prj glance
-%global short_name openstack-%{prj}
-%global os_release essex
 
 %if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 %endif
 
-Name:             %{short_name}-%{os_release}
+Name:             openstack-%{prj}
 Epoch:            1
 Version:          2012.1
 Release:          1
@@ -19,63 +17,64 @@ Vendor:           Grid Dynamics Consulting Services, Inc.
 URL:              http://%{prj}.openstack.org
 Source0:          %{name}-%{version}.tar.gz
 
-BuildRoot:        %{_tmppath}/%{prj}-%{version}-%{release}
+BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}
 
 BuildArch:        noarch
 BuildRequires:    python-devel
 BuildRequires:    python-setuptools
-BuildRequires:    python-distutils-extra
+BuildRequires:    intltool
 
 Requires(post):   chkconfig
 Requires(postun): initscripts
 Requires(preun):  chkconfig
 Requires(pre):    shadow-utils
-Requires:         python-%{prj}-%{os_release} = %{epoch}:%{version}-%{release}
-Requires:         python-kombu >= 1.1.3
+Requires:         python-%{prj} = %{epoch}:%{version}-%{release}
 Requires:         start-stop-daemon
-Requires:         python-jsonschema
 
-
-Conflicts: %{short_name} =< 2011.3.2
+Obsoletes:        %{name}-essex
 
 %description
-The Glance project provides services for discovering, registering, and
-retrieving virtual machine images. Glance has a RESTful API that allows
-querying of VM image metadata as well as retrieval of the actual image.
+OpenStack Image Service (code-named Glance) provides discovery, registration,
+and delivery services for virtual disk images. The Image Service API server
+provides a standard REST interface for querying information about virtual disk
+images stored in a variety of back-end stores, including OpenStack Object
+Storage. Clients can register new virtual disk images with the Image Service,
+query for information on publicly available disk images, and use the Image
+Service client library for streaming virtual disk images.
 
-This package contains the API server and a reference implementation registry
-server, along with a client library.
+This package contains the API and registry servers.
 
-%package -n       python-%{prj}-%{os_release}
+%package -n       python-%{prj}
 Summary:          Glance Python libraries
 Group:            Applications/System
 
-Requires:         python-setuptools
+Requires:         python-greenlet>=0.3.1
+Requires:         python-sqlalchemy>=0.7
 Requires:         python-anyjson
+Requires:         python-eventlet>=0.9.12
+Requires:         python-PasteDeploy
+Requires:         python-routes
+Requires:         python-webob==1.0.8
+Requires:         python-wsgiref
 Requires:         python-argparse
-Requires:         python-boto >= 1.9b
-Requires:         python-daemon = 1.5.5
-Requires:         python-eventlet >= 0.9.12
-Requires:         python-gflags >= 1.3
-Requires:         python-greenlet >= 0.3.1
-Requires:         python-lockfile >= 0.8
-Requires:         python-mox >= 0.5.0
-Requires:         python-paste-deploy >= 1.5.0
-Requires:         python-routes1.12
-Requires:         python-sqlalchemy0.7
-Requires:         python-webob1.0
-Requires:         pyxattr >= 0.6.0
-Requires:         python-pycrypto
-Requires:         python-migrate
-Requires:         python-crypto
-Requires:         python-iso8601
+Requires:         python-boto==2.1.1
+Requires:         python-migrate>=0.7
+Requires:         python-httplib2
+Requires:         pyxattr>=0.6.0
+Requires:         python-kombu
+Requires:         python-pycrypto>=2.1.0alpha1
+Requires:         python-pysendfile==2.0.0
+Requires:         python-iso8601>=0.1.4
 
-%description -n   python-%{prj}-%{os_release}
-The Glance project provides services for discovering, registering, and
-retrieving virtual machine images. Glance has a RESTful API that allows
-querying of VM image metadata as well as retrieval of the actual image.
+Requires:         python-jsonschema
 
-This package contains the project's Python library.
+Obsoletes:        python-%{prj}-essex
+
+%description -n   python-%{prj}
+OpenStack Image Service (code-named Glance) provides discovery, registration,
+and delivery services for virtual disk images.
+
+This package contains the glance Python library.
 
 %if 0%{?with_doc}
 %package doc
@@ -83,22 +82,19 @@ Summary:          Documentation for OpenStack Glance
 Group:            Documentation
 
 BuildRequires:    python-sphinx
-BuildRequires:    python-nose
+BuildRequires:    graphviz
+
 # Required to build module documents
 BuildRequires:    python-boto
 BuildRequires:    python-daemon
 BuildRequires:    python-eventlet
 BuildRequires:    python-gflags
-BuildRequires:    python-routes1.12
-BuildRequires:    python-sqlalchemy0.7
-BuildRequires:    python-webob1.0
 
 %description      doc
-The Glance project provides services for discovering, registering, and
-retrieving virtual machine images. Glance has a RESTful API that allows
-querying of VM image metadata as well as retrieval of the actual image.
+OpenStack Image Service (code-named Glance) provides discovery, registration,
+and delivery services for virtual disk images.
 
-This package contains documentation files for OpenStack Glance.
+This package contains documentation files for glance.
 
 %endif
 
@@ -212,7 +208,7 @@ fi
 %dir %attr(0755, %{prj}, nobody) %{_localstatedir}/log/%{prj}
 %dir %attr(0755, %{prj}, nobody) %{_localstatedir}/run/%{prj}
 
-%files -n python-%{prj}-%{os_release}
+%files -n python-%{prj}
 %{python_sitelib}/*
 
 %if 0%{?with_doc}
@@ -223,8 +219,12 @@ fi
 %endif
 
 %changelog
+* Mon Oct 15 2012 Alessio Ababilov <aababilov@griddynamics.com> - 2011.3
+- Cleanup the spec
+
 * Mon Mar 12 2012 Sergey Kosyrev <skosyrev@griddynamics.com> - 2011.3
 - Added missing dependencies: python-setuptools and start-stop-daemon
+
 * Fri Dec 16 2011 Boris Filippov <bfilippov@griddynamics.com> - 2011.3
 - Remove meaningless Jenkins changelog entries
 - Make init scripts LSB conformant
