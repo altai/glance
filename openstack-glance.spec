@@ -48,23 +48,23 @@ This package contains the API and registry servers.
 Summary:          Glance Python libraries
 Group:            Applications/System
 
-Requires:         python-greenlet>=0.3.1
-Requires:         python-sqlalchemy>=0.7
+Requires:         python-greenlet >= 0.3.1
+Requires:         python-sqlalchemy >= 0.7
 Requires:         python-anyjson
-Requires:         python-eventlet>=0.9.12
-Requires:         python-PasteDeploy
+Requires:         python-eventlet >= 0.9.12
+Requires:         python-paste-deploy
 Requires:         python-routes
-Requires:         python-webob==1.0.8
-Requires:         python-wsgiref
+Requires:         python-webob = 1.0.8
 Requires:         python-argparse
-Requires:         python-boto==2.1.1
-Requires:         python-migrate>=0.7
+Requires:         python-boto >= 2.1.1
+# = 2.1.1
+Requires:         python-migrate >= 0.7
 Requires:         python-httplib2
-Requires:         pyxattr>=0.6.0
+Requires:         pyxattr >= 0.6.0
 Requires:         python-kombu
-Requires:         python-pycrypto>=2.1.0alpha1
-Requires:         python-pysendfile==2.0.0
-Requires:         python-iso8601>=0.1.4
+Requires:         python-pycrypto >= 2.1.0alpha1
+#Requires:         python-pysendfile = 2.0.0
+Requires:         python-iso8601 >= 0.1.4
 
 Requires:         python-jsonschema
 
@@ -100,6 +100,8 @@ This package contains documentation files for glance.
 
 %prep
 %setup -q 
+sed '/pysendfile/d' tools/pip-requires
+
 
 %build
 %{__python} setup.py build
