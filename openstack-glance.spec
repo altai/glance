@@ -1,4 +1,3 @@
-%global with_doc 0
 %global prj glance
 
 %if ! (0%{?fedora} > 12 || 0%{?rhel} > 5)
@@ -81,7 +80,7 @@ This package contains the glance Python library.
 Summary:          Documentation for OpenStack Glance
 Group:            Documentation
 
-BuildRequires:    python-sphinx
+BuildRequires:    python-sphinx10
 BuildRequires:    graphviz
 
 # Required to build module documents
@@ -114,13 +113,10 @@ rm -rf %{buildroot}
 rm -fr %{buildroot}%{python_sitelib}/tests
 
 %if 0%{?with_doc}
-export PYTHONPATH="$( pwd ):$PYTHONPATH"
-pushd doc
-sphinx-build -b html source build/html
-popd
+PYTHONPATH="$PWD:$PYTHONPATH" sphinx-1.0-build -b html -d doc/build/doctrees doc/source doc/build/html
 
 # Fix hidden-file-or-dir warnings
-rm -fr doc/build/html/.doctrees doc/build/html/.buildinfo
+rm -fr doc/build/html/.buildinfo
 %endif
 
 # Setup directories
@@ -176,7 +172,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc README.rst
+%doc README* LICENSE HACKING*
 %{_bindir}/%{prj}
 %{_bindir}/%{prj}-api
 %{_bindir}/%{prj}-control
@@ -216,7 +212,6 @@ fi
 %if 0%{?with_doc}
 %files doc
 %defattr(-,root,root,-)
-%doc ChangeLog
 %doc doc/build/html
 %endif
 
